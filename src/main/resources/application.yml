@@ -11,9 +11,9 @@ spring:
         time-zone: GMT+8
         date-format: yyyy-MM-dd HH:mm:ss
     redis:
-        host: localhost
+        host: r-bp1x2h8s6phydq9chbpd.redis.rds.aliyuncs.com
         port: 6379
-        password:       # 密码（默认为空）
+        password: jinyutang@2020      # 密码（默认为空）
     servlet:
         multipart:
             maxFileSize: 104857600 #100MB

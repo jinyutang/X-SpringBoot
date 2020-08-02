@@ -15,6 +15,7 @@ public class Constant {
 
     public static final String TOKEN = "token";
     public static final String TOKEN_ENTRY_POINT_URL = "/token/login";
+    public static final String TOKEN_ENTRY_POINT_APP_URL = "/apptoken/login";
     public static final String TOKEN_LOGOUT_URL = "/token/logout";
     public static final int TOKEN_EXPIRE = 60 * 60 * 24 * 7;
 

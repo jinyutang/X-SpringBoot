@@ -225,25 +225,35 @@ INSERT INTO `sys_role_menu` VALUES ('74', '8', '39');
 -- ----------------------------
 -- Table structure for sys_user
 -- ----------------------------
-DROP TABLE IF EXISTS `sys_user`;
-CREATE TABLE `sys_user` (
-  `user_id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `username` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户名',
-  `password` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '密码',
-  `salt` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '盐',
-  `email` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '邮箱',
-  `mobile` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL COMMENT '手机号',
-  `status` tinyint(4) DEFAULT NULL COMMENT '状态  0：禁用   1：正常',
-  `create_user_id` bigint(20) DEFAULT NULL COMMENT '创建者ID',
-  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
-  PRIMARY KEY (`user_id`) USING BTREE,
-  UNIQUE KEY `username` (`username`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='系统用户';
+DROP TABLE IF EXISTS `aicar`.`sys_user` ;
+
+CREATE TABLE IF NOT EXISTS `aicar`.`sys_user` (
+                                                  `user_id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+                                                  `username` VARCHAR(50) NULL,
+                                                  `password` VARCHAR(100) NULL,
+                                                  `salt` VARCHAR(20) NULL,
+                                                  `email` VARCHAR(100) NULL,
+                                                  `mobile` VARCHAR(45) NULL,
+                                                  `status` VARCHAR(45) NULL,
+                                                  `create_user_id` BIGINT(20) NULL,
+                                                  `create_time` DATETIME NULL COMMENT '创建日期',
+                                                  `openid` VARCHAR(45) NULL,
+                                                  `unionid` VARCHAR(45) NULL,
+                                                  `nickname` VARCHAR(45) NULL,
+                                                  `avatar` VARCHAR(100) NULL COMMENT '头像',
+                                                  `gender` SET('保密', 'null', '男', '女', 'M', 'F') NULL DEFAULT '保密' COMMENT '性别',
+                                                  `delete` TINYINT NULL DEFAULT 0,
+                                                  PRIMARY KEY (`user_id`),
+                                                  UNIQUE INDEX `userid_UNIQUE` (`user_id` ASC) VISIBLE,
+                                                  UNIQUE INDEX `openid_UNIQUE` (`openid` ASC) VISIBLE,
+                                                  UNIQUE INDEX `unionid_UNIQUE` (`unionid` ASC) VISIBLE,
+                                                  UNIQUE INDEX `mobile_UNIQUE` (`mobile` ASC) VISIBLE)
+    ENGINE = InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='系统用户';
 
 -- ----------------------------
 -- Records of sys_user
 -- ----------------------------
-INSERT INTO `sys_user` VALUES ('1', 'admin', '$2a$10$aBO0nlhfUw4giy3sp5BQJu49xHOfuj578oBaaHo6hN6pIBiBObbEK', 'YzcmCZNvbXocrsz9dm8e', 'yzcheng90@qq.com', '13612345678', '1', '1', '2016-11-11 11:11:11');
+INSERT INTO `sys_user` VALUES ('1', 'admin', '$2a$10$aBO0nlhfUw4giy3sp5BQJu49xHOfuj578oBaaHo6hN6pIBiBObbEK', 'YzcmCZNvbXocrsz9dm8e', '15251524420@qq.com', '15251524420', '1', '1', '2020-8-2 11:11:11', '', '', '', '', 'M', 0 );
 
 -- ----------------------------
 -- Table structure for sys_user_role

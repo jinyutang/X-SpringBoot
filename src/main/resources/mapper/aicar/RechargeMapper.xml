@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.suke.czx.modules.aicar.mapper.RechargeMapper">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.suke.czx.modules.aicar.entity.Recharge" id="RechargeMap">
+        <result property="createdate" column="createdate"/>
+        <result property="data" column="data"/>
+        <result property="rechargeid" column="rechargeid"/>
+        <result property="userUserid" column="user_userid"/>
+    </resultMap>
+
+</mapper>

@@ -42,12 +42,12 @@ public class ValidateCodeFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) {
         String url = request.getRequestURI();
-        if (pathMatcher.match(Constant.TOKEN_ENTRY_POINT_URL,url)){
+        if (pathMatcher.match(Constant.TOKEN_ENTRY_POINT_URL,url) || pathMatcher.match(Constant.TOKEN_ENTRY_POINT_APP_URL,url)){
             String captcha = request.getParameter("captcha");
             String randomStr = request.getParameter("randomStr");
 
             if(StrUtil.isBlank(captcha) || StrUtil.isBlank(randomStr)){
-                CustomAuthenticationException exception = new CustomAuthenticationException("验证码为空");
+                CustomAuthenticationException exception = new CustomAuthenticationException("验证码为空...");
                 authenticationFailureHandler.onAuthenticationFailure(request,response,exception);
                 return;
             }

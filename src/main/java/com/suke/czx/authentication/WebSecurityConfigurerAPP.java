@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -43,8 +44,9 @@ import java.util.List;
 @Slf4j
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
-public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
+//@EnableGlobalMethodSecurity(prePostEnabled = true)
+@Order(101)
+public class WebSecurityConfigurerAPP extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
@@ -63,7 +65,6 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
         permitAll.add("/error");
         permitAll.add("/v2/**");
         permitAll.add(Constant.TOKEN_ENTRY_POINT_APP_URL);
-        permitAll.add(Constant.TOKEN_ENTRY_POINT_URL);
         String[] urls = permitAll.stream().distinct().toArray(String[]::new);
         ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry registry = http.authorizeRequests();
         registry.antMatchers(urls).permitAll().anyRequest().authenticated().and().csrf().disable();
@@ -75,13 +76,13 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
             .headers().frameOptions().disable()
             .and()
             .formLogin()
-            .loginProcessingUrl(Constant.TOKEN_ENTRY_POINT_URL)
-            .successHandler(authenticationSuccessHandler())
-            .failureHandler(authenticationFailureHandler())
+            .loginProcessingUrl(Constant.TOKEN_ENTRY_POINT_APP_URL)
+            .successHandler(authenticationSuccessHandler)
+            .failureHandler(customAuthenticationFailHandler)
             .and()
             .logout()
             .logoutUrl(Constant.TOKEN_LOGOUT_URL)
-            .addLogoutHandler(logoutHandler())
+            .addLogoutHandler(customLogoutSuccessHandler)
             .logoutSuccessUrl("/sys/logout")
             .permitAll()
             .and()
@@ -89,7 +90,7 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
             .authenticationEntryPoint(new TokenAuthenticationFailHandler())
             .and()
              // 如果不用验证码，注释这个过滤器即可
-            //.addFilterBefore(new ValidateCodeFilter(redisTemplate,authenticationFailureHandler()),UsernamePasswordAuthenticationFilter.class)
+            //.addFilterBefore(new ValidateCodeFilter(redisTemplate,customAuthenticationFailHandler),UsernamePasswordAuthenticationFilter.class)
             .addFilterBefore(new AuthenticationTokenFilter(authenticationManagerBean(),redisTemplate,customUserDetailsService), UsernamePasswordAuthenticationFilter.class);
     }
 
@@ -99,22 +100,15 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
                 .authenticationProvider(authenticationProvider());
     }
 
-    @Bean
-    public AuthenticationFailureHandler authenticationFailureHandler(){
-        return new CustomAuthenticationFailHandler();
-    }
+    @Autowired
+    CustomAuthenticationFailHandler customAuthenticationFailHandler;
 
-    @Bean
-    public LogoutHandler logoutHandler(){
-        return new CustomLogoutSuccessHandler();
-    }
+    @Autowired
+    CustomLogoutSuccessHandler  customLogoutSuccessHandler;
 
-    @Bean
-    public AuthenticationSuccessHandler authenticationSuccessHandler(){
-        return new CustomAuthenticationSuccessHandler();
-    }
+    @Autowired
+    AuthenticationSuccessHandler authenticationSuccessHandler;
 
-    @Bean
     @Override
     @SneakyThrows
     public AuthenticationManager authenticationManagerBean() {
@@ -126,12 +120,12 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
         web.ignoring().antMatchers("/css/**");
     }
 
-    @Bean
+
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
+
     public DaoAuthenticationProvider authenticationProvider() {
         CustomDaoAuthenticationProvider provider = new CustomDaoAuthenticationProvider();
         provider.setUserDetailsService(customUserDetailsService);

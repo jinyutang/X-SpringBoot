@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.suke.czx.modules.aicar.mapper.DeviceMapper">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.suke.czx.modules.aicar.entity.Device" id="DeviceMap">
+        <result property="createdate" column="createdate"/>
+        <result property="deadline" column="deadline"/>
+        <result property="deviceid" column="deviceid"/>
+        <result property="enabledate" column="enabledate"/>
+        <result property="mobile" column="mobile"/>
+        <result property="model" column="model"/>
+        <result property="modelid" column="modelid"/>
+        <result property="qrcode" column="qrcode"/>
+        <result property="sn" column="sn"/>
+        <result property="vipstatus" column="vipstatus"/>
+        <result property="viptype" column="viptype"/>
+    </resultMap>
+
+</mapper>
